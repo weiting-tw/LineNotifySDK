@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{13BC3793-7985-4F66-B964-7CD8381626A1}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LineNotifySDK", "LineNotifySDK\LineNotifySDK.csproj", "{AB96F6D8-A126-4CBE-B18A-93950BAFCCA6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LineNotifySDK.Tests", "LineNotifySDK.Tests\LineNotifySDK.Tests.csproj", "{AD8DFCE7-7C00-4B2F-9C21-3C81B598F0D8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB96F6D8-A126-4CBE-B18A-93950BAFCCA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB96F6D8-A126-4CBE-B18A-93950BAFCCA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB96F6D8-A126-4CBE-B18A-93950BAFCCA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB96F6D8-A126-4CBE-B18A-93950BAFCCA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD8DFCE7-7C00-4B2F-9C21-3C81B598F0D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD8DFCE7-7C00-4B2F-9C21-3C81B598F0D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD8DFCE7-7C00-4B2F-9C21-3C81B598F0D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD8DFCE7-7C00-4B2F-9C21-3C81B598F0D8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A45312C5-7A46-491B-9534-64DE1589EEBE}
+	EndGlobalSection
+EndGlobal
