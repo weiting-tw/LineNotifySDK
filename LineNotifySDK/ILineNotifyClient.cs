@@ -21,7 +21,7 @@ namespace LineNotifySDK
             string message,
             string imageThumbnail,
             [AliasAs("imageFullsize")] string imageFullSize,
-            FileInfo imageFile,
+            Stream imageFile,
             int? stickerPackageId,
             int? stickerId,
             bool notificationDisabled,

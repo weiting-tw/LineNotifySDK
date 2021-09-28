@@ -2,17 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>weiting</Authors>
+    <Product>LineNotifySDK</Product>
+    <RepositoryUrl></RepositoryUrl>
+    <PackageProjectUrl>https://github.com/a26007565/LineNotifySDK</PackageProjectUrl>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="test\**" />
-    <EmbeddedResource Remove="test\**" />
-    <None Remove="test\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove=".gitignore" />
-  </ItemGroup>
+  <PropertyGroup>
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>bin\LineNotifySDK.xml</DocumentationFile>
+    <NoWarn>1701;1702;1591</NoWarn>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Common.Logging" Version="3.4.1" />

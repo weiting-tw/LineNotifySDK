@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{13BC3793-7985-4F66-B964-7CD8381626A1}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LineNotifySDK", "LineNotifySDK\LineNotifySDK.csproj", "{AB96F6D8-A126-4CBE-B18A-93950BAFCCA6}"

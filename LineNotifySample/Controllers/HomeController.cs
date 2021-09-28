@@ -67,11 +67,17 @@ namespace LineNotifySample.Controllers
             return View("Index");
         }
 
-        public async Task<IActionResult> SentMessage(LineNotifyMessage lineNotifyMessage)
+        public async Task<IActionResult> SentMessage(NewLineNotifyMessage lineNotifyMessage)
         {
             var token = _httpContextAccessor.HttpContext.Session.GetString(TokenKey);
             if (!string.IsNullOrWhiteSpace(token))
             {
+                if (lineNotifyMessage.ImageFormFile != null
+                    && (lineNotifyMessage.ImageFormFile.ContentType.Equals("image/png")
+                        || lineNotifyMessage.ImageFormFile.ContentType.Equals("image/jpeg")))
+                {
+                    lineNotifyMessage.ImageFile = lineNotifyMessage.ImageFormFile.OpenReadStream();
+                }
                 await _lineNotifyServices.SentAsync(token, lineNotifyMessage);
                 ViewBag.Message = "Send Message Success";
             }
@@ -82,5 +88,11 @@ namespace LineNotifySample.Controllers
 
             return View("Index");
         }
+
+    }
+
+    public class NewLineNotifyMessage : LineNotifyMessage
+    {
+        public IFormFile ImageFormFile { get; set; }
     }
 }

@@ -31,7 +31,7 @@ namespace LineNotifySDK.Model
         /// There is a limit that you can upload to within one hour.
         /// For more information, please see the section of the API Rate Limit.
         /// </summary>
-        public FileInfo ImageFile { get; set; }
+        public Stream ImageFile { get; set; }
 
         ///// <summary>
         ///// Package ID. Sticker List.<see ref="https://developers.line.biz/en/docs/messaging-api/sticker-list/"/>
