@@ -12,6 +12,7 @@ namespace LineNotifySample.Controllers
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILineNotifyServices _lineNotifyServices;
+        private const string TokenKey = "token";
 
         public HomeController(IHttpContextAccessor httpContextAccessor,
             ILineNotifyServices lineNotifyServices)
@@ -38,27 +39,47 @@ namespace LineNotifySample.Controllers
 
         public async Task<IActionResult> BindCallback(string code, string state)
         {
+            if (code == null)
+            {
+                ViewBag.Message = "Binding Failed";
+                return View("Index");
+            }
+
             var token = await _lineNotifyServices.GetTokenAsync(code).ConfigureAwait(false);
-            _httpContextAccessor.HttpContext.Session.SetString("token", token);
+            _httpContextAccessor.HttpContext.Session.SetString(TokenKey, token);
             ViewBag.Token = token;
             if (!string.IsNullOrWhiteSpace(ViewBag.Token))
             {
-                ViewBag.Message = "綁定成功";
+                ViewBag.Message = "Binding Success";
             }
             return View("Index");
         }
 
         public async Task<IActionResult> LineRevoke()
         {
-            await _lineNotifyServices.RevokeAsync(_httpContextAccessor.HttpContext.Session.GetString("token")).ConfigureAwait(false);
-            ViewBag.Message = "解除綁定成功";
+            var token = _httpContextAccessor.HttpContext.Session.GetString(TokenKey);
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                await _lineNotifyServices.RevokeAsync(token).ConfigureAwait(false);
+                _httpContextAccessor.HttpContext.Session.SetString(TokenKey, string.Empty);
+                ViewBag.Message = "Unbind Success";
+            }
             return View("Index");
         }
 
         public async Task<IActionResult> SentMessage(LineNotifyMessage lineNotifyMessage)
         {
-            await _lineNotifyServices.SentAsync(_httpContextAccessor.HttpContext.Session.GetString("token"), lineNotifyMessage);
-            ViewBag.Message = "傳送成功";
+            var token = _httpContextAccessor.HttpContext.Session.GetString(TokenKey);
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                await _lineNotifyServices.SentAsync(token, lineNotifyMessage);
+                ViewBag.Message = "Send Message Success";
+            }
+            else
+            {
+                ViewBag.Message = "You need to bind first";
+            }
+
             return View("Index");
         }
     }
