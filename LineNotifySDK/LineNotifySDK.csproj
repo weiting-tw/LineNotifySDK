@@ -1,18 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>weiting</Authors>
     <Product>LineNotifySDK</Product>
-    <RepositoryUrl></RepositoryUrl>
+    <RepositoryUrl>https://github.com/a26007565/LineNotifySDK</RepositoryUrl>
     <PackageProjectUrl>https://github.com/a26007565/LineNotifySDK</PackageProjectUrl>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <OutputPath>bin\</OutputPath>
     <DocumentationFile>bin\LineNotifySDK.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
     <Version>0.1.0</Version>
+    <PackageTags>Line LineNotify LineNotifySDK</PackageTags>
+    <Copyright>Copyright (c) 2021 weiting</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
