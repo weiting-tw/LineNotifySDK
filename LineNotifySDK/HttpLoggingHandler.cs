@@ -17,6 +17,10 @@ namespace LineNotifySDK
 
         public HttpLoggingHandler()
         {
+            if (InnerHandler is null)
+            {
+                InnerHandler = new HttpClientHandler();
+            }
             _logger = LogManager.GetLogger(GetType());
         }
 

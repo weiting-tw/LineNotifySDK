@@ -58,12 +58,13 @@ namespace LineNotifySDK
                 new FormUrlEncodedContent(dictionary), cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
             {
-                throw new LineNotifyException();
+                var message = JsonDocument.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false))
+                    .RootElement.GetProperty("message").GetString();
+                throw new LineNotifyException(message);
             }
 
             var content = JsonDocument.Parse(
-                await response.Content.ReadAsStringAsync().ConfigureAwait(false),
-                new JsonDocumentOptions { AllowTrailingCommas = true });
+                await response.Content.ReadAsStringAsync().ConfigureAwait(false));
             return content.RootElement.GetProperty("access_token").GetString();
         }
 

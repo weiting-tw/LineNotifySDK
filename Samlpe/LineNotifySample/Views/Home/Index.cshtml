@@ -1,0 +1,40 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Line Notify Sample Demo</h1>
+
+    <a asp-action="LineAuthorize" class="btn btn-info mb-2">Bind</a>
+    <a asp-action="LineRevoke" class="btn btn-info mb-2">Unbind</a>
+
+    <p>Message = @ViewBag.Message</p>
+
+    @using (Html.BeginForm("SentMessage", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Message</span>
+            </div>
+            <input id="message" name="message" type="text" class="form-control" placeholder="Enter message" value="text" required />
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Image Thumbnail</span>
+            </div>
+            <input id="imageThumbnail" name="imageThumbnail" type="text" class="form-control" placeholder="Enter image thumbnail url" />
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Image FullSize</span>
+            </div>
+            <input id="imageFullSize" name="imageFullSize" type="text" class="form-control" placeholder="Enter image FullSize url" />
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-info mb-2">傳送訊息</button>
+        </div>
+    }
+</div>

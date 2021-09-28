@@ -24,6 +24,13 @@ namespace LineNotifySDK.Model
         ///// </summary>
         public string ImageFullSize { get; set; }
 
+        /// <summary>
+        /// Upload a image file to the LINE server.
+        /// Supported image format is png and jpeg.
+        /// If you specified imageThumbnail, imageFullsize and imageFile, imageFile takes precedence.
+        /// There is a limit that you can upload to within one hour.
+        /// For more information, please see the section of the API Rate Limit.
+        /// </summary>
         public FileInfo ImageFile { get; set; }
 
         ///// <summary>
