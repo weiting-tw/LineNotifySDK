@@ -6,7 +6,6 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
-using Humanizer;
 
 namespace LineNotifySDK
 {
@@ -60,7 +59,7 @@ namespace LineNotifySDK
             var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
             stopWatch.Stop();
 
-            _logger.Debug($"{msg} Duration: {stopWatch.Elapsed.Humanize()}");
+            _logger.Debug($"{msg} Duration: {stopWatch.Elapsed.Milliseconds} ms");
             _logger.Debug($"{msg} ==========End==========");
 
             // Response

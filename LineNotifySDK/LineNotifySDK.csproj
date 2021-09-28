@@ -9,7 +9,7 @@
     <OutputPath>bin\</OutputPath>
     <DocumentationFile>bin\LineNotifySDK.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <PackageTags>Line LineNotify LineNotifySDK</PackageTags>
     <Copyright>Copyright (c) 2021 weiting</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -17,11 +17,9 @@
 
   <ItemGroup>
     <PackageReference Include="Common.Logging" Version="3.4.1" />
-    <PackageReference Include="Humanizer.Core" Version="2.11.10" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
     <PackageReference Include="refit" Version="6.0.94" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.12.2" />
   </ItemGroup>
 </Project>
