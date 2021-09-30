@@ -1,4 +1,4 @@
-name: Build and deploy .NET Core app to Windows WebApp lineNotifyDemo
+name: Build and deploy
 on:
   push:
     branches:
