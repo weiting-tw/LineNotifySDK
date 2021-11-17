@@ -11,7 +11,6 @@ namespace LineNotifySDK.Model
         /// <summary>
         /// 1000 characters max
         /// </summary>
-        [StringLength(1000, ErrorMessage = "1000 characters max")]
         public string Message { get; set; }
 
         /// <summary>

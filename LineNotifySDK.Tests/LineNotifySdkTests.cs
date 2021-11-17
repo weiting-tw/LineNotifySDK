@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using FluentValidation;
 using LineNotifySDK.Model;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
@@ -41,8 +42,8 @@ namespace LineNotifySDK.Tests
                 _mockHttp = new MockHttpMessageHandler();
                 services.AddSingleton(_mockHttp);
                 var mockFactory = new Mock<IHttpClientFactory>();
-                mockFactory.Setup(_ => _.CreateClient("notifyBotClient")).Returns(new HttpClient(_mockHttp){BaseAddress = new Uri("https://notify-bot.line.me") });
-                mockFactory.Setup(_ => _.CreateClient("notifyApiClient")).Returns(new HttpClient(_mockHttp){BaseAddress = new Uri("https://notify-api.line.me") });
+                mockFactory.Setup(_ => _.CreateClient("notifyBotClient")).Returns(new HttpClient(_mockHttp) { BaseAddress = new Uri("https://notify-bot.line.me") });
+                mockFactory.Setup(_ => _.CreateClient("notifyApiClient")).Returns(new HttpClient(_mockHttp) { BaseAddress = new Uri("https://notify-api.line.me") });
                 services.AddSingleton(x => mockFactory.Object);
             }
             services.AddLineNotifyServices((_, options) =>
@@ -81,13 +82,149 @@ namespace LineNotifySDK.Tests
         }
 
         [Fact]
+        public async Task GetTokenMissingToken()
+        {
+            await Assert.ThrowsAsync<ArgumentException>(
+                () => _lineNotify.GetTokenAsync(null)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<ArgumentException>(
+                () => _lineNotify.GetTokenAsync("")).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task GetTokenError()
+        {
+            var str = JsonSerializer.Serialize(new LineMessageResponse { Status = 401, Message = "Invalid access token" });
+            var result = new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.Unauthorized,
+                Content = new StringContent(str, Encoding.UTF8, "application/json")
+            };
+            _mockHttp?.Expect(HttpMethod.Post, "https://notify-bot.line.me/oauth/token")
+                .Respond(_ => result);
+            await Assert.ThrowsAsync<LineNotifyException>(
+                () => _lineNotify.GetTokenAsync("token")).ConfigureAwait(false);
+        }
+
+        [Fact]
         public async Task SentMessage()
         {
             var str = JsonSerializer.Serialize(new LineMessageResponse { Status = 200, Message = "ok" });
             var result = new HttpResponseMessage { Content = new StringContent(str, Encoding.UTF8, "application/json") };
             _mockHttp?.Expect(HttpMethod.Post, "https://notify-api.line.me/api/notify")
                 .Respond(_ => result);
-            await _lineNotify.SentAsync("token", new LineNotifyMessage { Message = "test" }).ConfigureAwait(false);
+            await _lineNotify.SentAsync("token", new LineNotifyMessage { Message = "text" }).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task SentMessageError()
+        {
+            var str = JsonSerializer.Serialize(new LineMessageResponse { Status = 401, Message = "Invalid access token" });
+            var result = new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.Unauthorized,
+                Content = new StringContent(str, Encoding.UTF8, "application/json")
+            };
+            _mockHttp?.Expect(HttpMethod.Post, "https://notify-api.line.me/api/notify")
+                .Respond(_ => result);
+            await Assert.ThrowsAsync<LineNotifyException>(
+                () => _lineNotify.SentAsync("token", new LineNotifyMessage { Message = "text" })).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task SentMessageMissingToken()
+        {
+            await Assert.ThrowsAsync<ArgumentException>(
+                () => _lineNotify.SentAsync(null, new LineNotifyMessage { Message = "text" })).ConfigureAwait(false);
+            await Assert.ThrowsAsync<ArgumentException>(
+                () => _lineNotify.SentAsync("", new LineNotifyMessage { Message = "text" })).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task SentEmptyMessageException()
+        {
+            await Assert.ThrowsAsync<ValidationException>(
+                () => _lineNotify.SentAsync("token", new LineNotifyMessage { Message = "" })).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task SentImageFileMessageException()
+        {
+            await Assert.ThrowsAsync<ValidationException>(
+                () => _lineNotify.SentAsync(
+                    "token",
+                    new LineNotifyMessage
+                    {
+                        Message = "text",
+                        ImageFullSize = "https://image.png"
+                    })).ConfigureAwait(false);
+            await Assert.ThrowsAsync<ValidationException>(
+                () => _lineNotify.SentAsync(
+                    "token",
+                    new LineNotifyMessage
+                    {
+                        Message = "text",
+                        ImageThumbnail = "https://image.png"
+                    })).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task Revoke()
+        {
+            _mockHttp?.Expect(HttpMethod.Post, "https://notify-api.line.me/api/revoke")
+                .Respond(_ => new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("{\"access_token\":\"token\"}") });
+            await _lineNotify.RevokeAsync("token").ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task RevokeException()
+        {
+            await Assert.ThrowsAsync<ArgumentException>(
+                () => _lineNotify.RevokeAsync(null)).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task RevokeError()
+        {
+            var str = JsonSerializer.Serialize(new LineMessageResponse { Status = 401, Message = "Invalid access token" });
+            var result = new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.Unauthorized,
+                Content = new StringContent(str, Encoding.UTF8, "application/json")
+            };
+            _mockHttp?.Expect(HttpMethod.Post, "https://notify-api.line.me/api/revoke")
+                .Respond(_ => result);
+            await Assert.ThrowsAsync<LineNotifyException>(
+                () => _lineNotify.RevokeAsync("token")).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task Status()
+        {
+            _mockHttp?.Expect(HttpMethod.Get, "https://notify-api.line.me/api/status")
+                .Respond(_ => new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("{\"access_token\":\"token\"}") });
+            await _lineNotify.StatusAsync("token").ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task StatusException()
+        {
+            await Assert.ThrowsAsync<ArgumentException>(
+                () => _lineNotify.StatusAsync(null)).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task StatusError()
+        {
+            var str = JsonSerializer.Serialize(new LineMessageResponse { Status = 401, Message = "Invalid access token" });
+            var result = new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.Unauthorized,
+                Content = new StringContent(str, Encoding.UTF8, "application/json")
+            };
+            _mockHttp?.Expect(HttpMethod.Get, "https://notify-api.line.me/api/status")
+                .Respond(_ => result);
+            await Assert.ThrowsAsync<LineNotifyException>(
+                () => _lineNotify.StatusAsync("token")).ConfigureAwait(false);
         }
     }
 }

@@ -1,11 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>weiting</Authors>
     <Product>LineNotifySDK</Product>
-    <RepositoryUrl>https://github.com/a26007565/LineNotifySDK</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/a26007565/LineNotifySDK</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/weiting-tw/LineNotifySDK</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/weiting-tw/LineNotifySDK</PackageProjectUrl>
     <OutputPath>bin\</OutputPath>
     <DocumentationFile>bin\LineNotifySDK.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
@@ -17,9 +17,9 @@
 
   <ItemGroup>
     <PackageReference Include="Common.Logging" Version="3.4.1" />
+    <PackageReference Include="FluentValidation" Version="10.3.4" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
-    <PackageReference Include="refit" Version="6.0.94" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+    <PackageReference Include="refit" Version="6.1.15" />
   </ItemGroup>
 </Project>

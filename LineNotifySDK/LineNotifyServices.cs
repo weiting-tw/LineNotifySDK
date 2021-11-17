@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using LineNotifySDK.Model;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
@@ -14,12 +16,14 @@ namespace LineNotifySDK
     public class LineNotifyServices : ILineNotifyServices
     {
         private readonly IOptionsMonitor<LineNotifyOptions> _options;
+        private readonly IValidator<LineNotifyMessage> _validator;
         private readonly ILineNotifyClient _notifyApiClient;
         private readonly HttpClient _notifyBotClient;
 
-        public LineNotifyServices(IHttpClientFactory httpClientFactory, IOptionsMonitor<LineNotifyOptions> options)
+        public LineNotifyServices(IHttpClientFactory httpClientFactory, IOptionsMonitor<LineNotifyOptions> options, IValidator<LineNotifyMessage> validator)
         {
             _options = options;
+            _validator = validator;
             _notifyBotClient = httpClientFactory.CreateClient("notifyBotClient");
             _notifyApiClient = RestService.For<ILineNotifyClient>(httpClientFactory.CreateClient("notifyApiClient"));
         }
@@ -59,7 +63,9 @@ namespace LineNotifySDK
             if (!response.IsSuccessStatusCode)
             {
                 var message = JsonDocument.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false))
-                    .RootElement.GetProperty("message").GetString();
+                    .RootElement
+                    .EnumerateObject()
+                    .FirstOrDefault(c => c.Name.Equals("message", StringComparison.OrdinalIgnoreCase)).Value.ToString();
                 throw new LineNotifyException(message);
             }
 
@@ -75,6 +81,7 @@ namespace LineNotifySDK
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(token));
             }
 
+            await _validator.ValidateAndThrowAsync(message).ConfigureAwait(false);
             var response = await _notifyApiClient.Sent(
                 token,
                 message.Message,
@@ -126,7 +133,9 @@ namespace LineNotifySDK
             var message = string.IsNullOrWhiteSpace(exception.Content)
                 ? string.Empty
                 : JsonDocument.Parse(exception.Content)
-                    .RootElement.GetProperty("message").GetString();
+                    .RootElement
+                    .EnumerateObject()
+                    .FirstOrDefault(c => c.Name.Equals("message", StringComparison.OrdinalIgnoreCase)).Value.ToString();
             throw new LineNotifyException(message, exception);
         }
     }
