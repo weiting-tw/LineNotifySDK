@@ -30,7 +30,7 @@ namespace LineNotifySDK
             services.AddHttpClient("notifyBotClient",
                     x => { x.BaseAddress = new Uri("https://notify-bot.line.me"); })
                 .ConfigurePrimaryHttpMessageHandler(_ => new HttpLoggingHandler());
-            services.AddSingleton<ILineNotifyServices, LineNotifyServices>();
+            services.AddScoped<ILineNotifyServices, LineNotifyServices>();
         }
     }
 }

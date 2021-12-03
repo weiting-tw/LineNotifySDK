@@ -81,7 +81,7 @@ namespace LineNotifySDK
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(token));
             }
 
-            await _validator.ValidateAndThrowAsync(message).ConfigureAwait(false);
+            await _validator.ValidateAndThrowAsync(message, cancellationToken).ConfigureAwait(false);
             var response = await _notifyApiClient.Sent(
                 token,
                 message.Message,

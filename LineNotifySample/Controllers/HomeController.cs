@@ -1,5 +1,8 @@
+using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
 using LineNotifySample.Models;
 using LineNotifySDK;
 using LineNotifySDK.Model;
@@ -14,7 +17,8 @@ namespace LineNotifySample.Controllers
         private readonly ILineNotifyServices _lineNotifyServices;
         private const string TokenKey = "token";
 
-        public HomeController(IHttpContextAccessor httpContextAccessor,
+        public HomeController(
+            IHttpContextAccessor httpContextAccessor,
             ILineNotifyServices lineNotifyServices)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -46,7 +50,7 @@ namespace LineNotifySample.Controllers
             }
 
             var token = await _lineNotifyServices.GetTokenAsync(code).ConfigureAwait(false);
-            _httpContextAccessor.HttpContext.Session.SetString(TokenKey, token);
+            _httpContextAccessor.HttpContext?.Session.SetString(TokenKey, token);
             ViewBag.Token = token;
             if (!string.IsNullOrWhiteSpace(ViewBag.Token))
             {
@@ -57,7 +61,7 @@ namespace LineNotifySample.Controllers
 
         public async Task<IActionResult> LineRevoke()
         {
-            var token = _httpContextAccessor.HttpContext.Session.GetString(TokenKey);
+            var token = _httpContextAccessor.HttpContext?.Session.GetString(TokenKey);
             if (!string.IsNullOrWhiteSpace(token))
             {
                 await _lineNotifyServices.RevokeAsync(token).ConfigureAwait(false);
@@ -69,7 +73,7 @@ namespace LineNotifySample.Controllers
 
         public async Task<IActionResult> SentMessage(NewLineNotifyMessage lineNotifyMessage)
         {
-            var token = _httpContextAccessor.HttpContext.Session.GetString(TokenKey);
+            var token = _httpContextAccessor.HttpContext?.Session.GetString(TokenKey);
             if (!string.IsNullOrWhiteSpace(token))
             {
                 if (lineNotifyMessage.ImageFormFile != null
@@ -78,8 +82,17 @@ namespace LineNotifySample.Controllers
                 {
                     lineNotifyMessage.ImageFile = lineNotifyMessage.ImageFormFile.OpenReadStream();
                 }
-                await _lineNotifyServices.SentAsync(token, lineNotifyMessage);
-                ViewBag.Message = "Send Message Success";
+
+                try
+                {
+                    await _lineNotifyServices.SentAsync(token, lineNotifyMessage);
+                    ViewBag.Message = "Send Message Success";
+                }
+                catch (ValidationException e)
+                {
+                    ViewBag.Message = string.Join(',', e.Errors.Select(x => x.ErrorMessage)).ToString();
+                }
+
             }
             else
             {
@@ -88,7 +101,6 @@ namespace LineNotifySample.Controllers
 
             return View("Index");
         }
-
     }
 
     public class NewLineNotifyMessage : LineNotifyMessage

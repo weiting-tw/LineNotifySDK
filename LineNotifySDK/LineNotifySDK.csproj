@@ -9,7 +9,7 @@
     <OutputPath>bin\</OutputPath>
     <DocumentationFile>bin\LineNotifySDK.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
-    <Version>0.1.1</Version>
+    <Version>0.2.0</Version>
     <PackageTags>Line LineNotify LineNotifySDK</PackageTags>
     <Copyright>Copyright (c) 2021 weiting</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

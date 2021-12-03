@@ -1,6 +1,6 @@
 # LineNotifySDK
 
-[![Build and deploy](https://github.com/a26007565/LineNotifySDK/actions/workflows/lineNotifyDemo.yml/badge.svg?branch=master)](https://github.com/a26007565/LineNotifySDK/actions/workflows/lineNotifyDemo.yml)
+[![Build and deploy](https://github.com/weiting-tw/LineNotifySDK/actions/workflows/lineNotifyDemo.yml/badge.svg?branch=master)](https://github.com/weiting-tw/LineNotifySDK/actions/workflows/lineNotifyDemo.yml)
 
 ## Info
 
@@ -18,7 +18,7 @@
 
 ## Usage
 
-Add to [Startup.cs](https://github.com/a26007565/LineNotifySDK/blob/master/LineNotifySample/Startup.cs)
+Add to [Startup.cs](https://github.com/weiting-tw/LineNotifySDK/blob/master/LineNotifySample/Startup.cs)
 
 ```cs
  services.AddLineNotifyServices((_, options) =>
@@ -29,4 +29,4 @@ Add to [Startup.cs](https://github.com/a26007565/LineNotifySDK/blob/master/LineN
 });
 ```
 
-Set authorize and callback with [Controller](https://github.com/a26007565/LineNotifySDK/blob/master/LineNotifySample/Controllers/HomeController.cs)
+Set authorize and callback with [Controller](https://github.com/weiting-tw/LineNotifySDK/blob/master/LineNotifySample/Controllers/HomeController.cs)
